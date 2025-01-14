@@ -6,6 +6,8 @@ TABLES: zemail_recipient.
 * Deklaration einer Arbeitsbereichsvariable für den Vornamen
 DATA: wa_Forname LIKE zemail_recipient-Forname.
 
+*This is a comment in the selection field
+selection-screen comment /40(20) text-001.
 * Definition der Parameter für die Eingabe
 PARAMETERS: my_fn LIKE zemail_recipient-forname DEFAULT 'Bene' OBLIGATORY,  " Vorname, Standardwert 'Bene', Pflichtfeld
             my_sn LIKE zemail_recipient-surname DEFAULT 'Held',          " Nachname, Standardwert 'Held'
