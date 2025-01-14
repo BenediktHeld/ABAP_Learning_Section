@@ -6,8 +6,12 @@ TABLES: zemail_recipient.
 * Deklaration einer Arbeitsbereichsvariable für den Vornamen
 DATA: wa_Forname LIKE zemail_recipient-Forname.
 
+*Start of the element block (Frame)
+selection-screen begin of block myblock1 with frame title text-003.
+
 *This is a comment in the selection field
 selection-screen comment /40(20) text-001.
+
 * Definition der Parameter für die Eingabe
 PARAMETERS: my_fn LIKE zemail_recipient-forname DEFAULT 'Bene' OBLIGATORY,  " Vorname, Standardwert 'Bene', Pflichtfeld
             my_sn LIKE zemail_recipient-surname DEFAULT 'Held',          " Nachname, Standardwert 'Held'
@@ -18,6 +22,9 @@ PARAMETERS: my_fn LIKE zemail_recipient-forname DEFAULT 'Bene' OBLIGATORY,  " Vo
 
 * Definition der Auswahloptionen für die Abfrage
 SELECT-OPTIONS: my_qn FOR zemail_recipient-q_number.                  " Auswahloptionen für die Frage-Nummer
+
+*End of the element block (Frame)
+selection-screen end of block myblock1.
 
 * Initialisierung
 
