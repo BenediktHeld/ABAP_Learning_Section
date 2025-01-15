@@ -1,32 +1,34 @@
-REPORT ZINTERNALTABELS_EXAMPLE.
+REPORT ZINTERNALTABELS2.
 
-* Definition einer Struktur für die Zeilen der internen Tabelle
-TYPES: BEGIN OF line_typ,  " Beginn der Definition des Zeilentyp
-         surname TYPE string,  " Feld für Nachnamen (Typ String)
-         qnumber TYPE i,  " Feld für die Frage-Nummer (Typ Integer)
-       END OF line_typ.  " Ende der Definition des Zeilentyp
+TABLES: zemail_recipient.  " Deklaration der Datenbanktabelle zemail_recipient
+
+* Definition eines Zeilentypen für die interne Tabelle
+TYPES: BEGIN OF line_type1,  " Beginn der Definition des Zeilentyp
+         email LIKE zemail_recipient-email,  " Feld für die E-Mail-Adresse
+         q_number LIKE zemail_recipient-q_number,  " Feld für die Frage-Nummer
+         forname LIKE zemail_recipient-forname,  " Feld für den Vornamen
+         surname LIKE zemail_recipient-surname,  " Feld für den Nachnamen
+       END OF line_type1.  " Ende der Definition des Zeilentyp
 
 * Definition eines Tabellentyps basierend auf dem Zeilentyp
-TYPES: itab_type TYPE STANDARD TABLE OF line_typ.  " Standardtabelle vom Typ line_typ
+TYPES: itab_type1 TYPE STANDARD TABLE OF line_type1.  " Standardtabelle vom Typ line_type1
 
-* Deklaration der internen Tabelle und der Arbeitsbereiche
-DATA: itab TYPE itab_type,  " Interne Tabelle itab vom Typ itab_type
-      wa_line TYPE line_typ.  " Arbeitsbereich wa_line vom Typ line_typ
+* Deklaration der internen Tabelle und des Arbeitsbereichs
+DATA: itab TYPE itab_type1,  " Interne Tabelle itab vom Typ itab_type1
+      wa_line TYPE line_type1.  " Arbeitsbereich wa_line vom Typ line_type1
 
-* Beispiel-Daten in die interne Tabelle einfügen
-wa_line-surname = 'Müller'.  " Nachnamen setzen
-wa_line-qnumber = 1.  " Frage-Nummer setzen
-APPEND wa_line TO itab.  " Zeile zur internen Tabelle hinzufügen
+* Daten aus der Tabelle zemail_recipient in die interne Tabelle itab einfügen
+SELECT * FROM zemail_recipient INTO TABLE itab where Q_NUMBER = 'QTE8283'.  " Alle Datensätze in die interne Tabelle itab einfügen
 
-wa_line-surname = 'Schmidt'.  " Nachnamen setzen
-wa_line-qnumber = 2.  " Frage-Nummer setzen
-APPEND wa_line TO itab.  " Zeile zur internen Tabelle hinzufügen
-
-wa_line-surname = 'Meier'.  " Nachnamen setzen
-wa_line-qnumber = 3.  " Frage-Nummer setzen
-APPEND wa_line TO itab.  " Zeile zur internen Tabelle hinzufügen
-
-* Ausgabe der Daten aus der internen Tabelle
-LOOP AT itab INTO wa_line.  " Schleife über die interne Tabelle
-  WRITE: / 'Nachname:', wa_line-surname, 'Frage-Nummer:', wa_line-qnumber.  " Ausgabe der Daten
-ENDLOOP.  " Ende der Schleife
+* Überprüfen, ob die interne Tabelle Daten enthält
+IF sy-subrc = 0.  " sy-subrc = 0 bedeutet, dass die Auswahl erfolgreich war
+  " Ausgabe der Daten aus der internen Tabelle
+  LOOP AT itab INTO wa_line.  " Schleife über die interne Tabelle itab
+    WRITE: / 'E-Mail:', wa_line-email,  " Ausgabe der E-Mail-Adresse
+           'Q-Nummer:', wa_line-q_number,  " Ausgabe der Frage-Nummer
+           'Vorname:', wa_line-forname,  " Ausgabe des Vornamens
+           'Nachname:', wa_line-surname.  " Ausgabe des Nachnamens
+  ENDLOOP.  " Ende der Schleife
+ELSE.
+  WRITE: / 'Keine Daten gefunden.'." Ausgabe, wenn keine Daten vorhanden sind
+ENDIF.
