@@ -1,24 +1,32 @@
-REPORT ZINTERNALTABELS.
+REPORT ZINTERNALTABELS_EXAMPLE.
 
-* Define an internal table with a header line
-DATA: BEGIN OF itab01 OCCURS 0,  " Start of internal table itab01 with header line
-        surname LIKE zemail_recipient-surname,  " Field for surname
-        qnumber LIKE zemail_recipient-q_number,  " Field for question number
-      END OF itab01.  " End of internal table itab01
+* Definition einer Struktur für die Zeilen der internen Tabelle
+TYPES: BEGIN OF line_typ,  " Beginn der Definition des Zeilentyp
+         surname TYPE string,  " Feld für Nachnamen (Typ String)
+         qnumber TYPE i,  " Feld für die Frage-Nummer (Typ Integer)
+       END OF line_typ.  " Ende der Definition des Zeilentyp
 
-* New way of defining internal tables
-* Define a line type for the internal table
-TYPES: BEGIN OF line01_typ,  " Start of line type definition
-         surname LIKE zemail_recipient-surname,  " Field for surname
-         qnumber LIKE zemail_recipient-q_number,  " Field for question number
-       END OF line01_typ.  " End of line type definition
+* Definition eines Tabellentyps basierend auf dem Zeilentyp
+TYPES: itab_type TYPE STANDARD TABLE OF line_typ.  " Standardtabelle vom Typ line_typ
 
-* Define a table type based on the line type
-TYPES: itab02_typ TYPE STANDARD TABLE OF line01_typ.  " Table type for standard table of line01_typ
+* Deklaration der internen Tabelle und der Arbeitsbereiche
+DATA: itab TYPE itab_type,  " Interne Tabelle itab vom Typ itab_type
+      wa_line TYPE line_typ.  " Arbeitsbereich wa_line vom Typ line_typ
 
-* Declare the internal tables based on the defined table type
-DATA: itab02 TYPE itab02_typ,  " Internal table itab02 of type itab02_typ
-      itab03 TYPE itab02_typ.  " Internal table itab03 of type itab02_typ
+* Beispiel-Daten in die interne Tabelle einfügen
+wa_line-surname = 'Müller'.  " Nachnamen setzen
+wa_line-qnumber = 1.  " Frage-Nummer setzen
+APPEND wa_line TO itab.  " Zeile zur internen Tabelle hinzufügen
 
-* Declare a work area to use with our internal table
-DATA: wa_itab02 TYPE line01_typ.  " Work area wa_itab02 of type line01_typ
+wa_line-surname = 'Schmidt'.  " Nachnamen setzen
+wa_line-qnumber = 2.  " Frage-Nummer setzen
+APPEND wa_line TO itab.  " Zeile zur internen Tabelle hinzufügen
+
+wa_line-surname = 'Meier'.  " Nachnamen setzen
+wa_line-qnumber = 3.  " Frage-Nummer setzen
+APPEND wa_line TO itab.  " Zeile zur internen Tabelle hinzufügen
+
+* Ausgabe der Daten aus der internen Tabelle
+LOOP AT itab INTO wa_line.  " Schleife über die interne Tabelle
+  WRITE: / 'Nachname:', wa_line-surname, 'Frage-Nummer:', wa_line-qnumber.  " Ausgabe der Daten
+ENDLOOP.  " Ende der Schleife
